@@ -1,0 +1,17 @@
+apiVersion: gitlab.crossplane.io/v1alpha1
+kind: File
+metadata:
+  name: crossplane-file
+spec:
+  deletionPolicy: Delete
+  forProvider:
+    authorName: Dana
+    authorEmail: dana@dana.io
+    commitMessage: "file created by crossplane"
+    content: "this was written by crossplane"
+    filePath: "crossplane.txt"
+    branch: main
+    project: <project-id or name>
+    overwriteOnCreate: true
+  providerConfigRef:
+    name: default

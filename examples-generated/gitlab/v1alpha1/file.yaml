@@ -1,0 +1,49 @@
+apiVersion: gitlab.crossplane.io/v1alpha1
+kind: File
+metadata:
+  annotations:
+    meta.upbound.io/example-id: gitlab/v1alpha1/file
+  labels:
+    testing.upbound.io/example-name: this
+  name: this
+spec:
+  forProvider:
+    authorEmail: terraform@example.com
+    authorName: Terraform
+    branch: main
+    commitMessage: 'feature: add meow file'
+    content: ${base64encode("Meow goes the cat")}
+    filePath: meow.txt
+    project: ${gitlab_project.this.id}
+
+---
+
+apiVersion: gitlab.crossplane.io/v1alpha1
+kind: Group
+metadata:
+  annotations:
+    meta.upbound.io/example-id: gitlab/v1alpha1/file
+  labels:
+    testing.upbound.io/example-name: this
+  name: this
+spec:
+  forProvider:
+    description: An example group
+    name: example
+    path: example
+
+---
+
+apiVersion: gitlab.crossplane.io/v1alpha1
+kind: Project
+metadata:
+  annotations:
+    meta.upbound.io/example-id: gitlab/v1alpha1/file
+  labels:
+    testing.upbound.io/example-name: this
+  name: this
+spec:
+  forProvider:
+    initializeWithReadme: true
+    name: example
+    namespaceId: ${gitlab_group.this.id}

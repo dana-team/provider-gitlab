@@ -9,15 +9,25 @@ import (
 
 	"github.com/crossplane/upjet/pkg/controller"
 
-	resource "github.com/upbound/upjet-provider-template/internal/controller/null/resource"
-	providerconfig "github.com/upbound/upjet-provider-template/internal/controller/providerconfig"
+	file "github.com/dana-team/provider-gitlab/internal/controller/gitlab/file"
+	group "github.com/dana-team/provider-gitlab/internal/controller/gitlab/group"
+	groupmembership "github.com/dana-team/provider-gitlab/internal/controller/gitlab/groupmembership"
+	project "github.com/dana-team/provider-gitlab/internal/controller/gitlab/project"
+	projectmembership "github.com/dana-team/provider-gitlab/internal/controller/gitlab/projectmembership"
+	user "github.com/dana-team/provider-gitlab/internal/controller/gitlab/user"
+	providerconfig "github.com/dana-team/provider-gitlab/internal/controller/providerconfig"
 )
 
 // Setup creates all controllers with the supplied logger and adds them to
 // the supplied manager.
 func Setup(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
-		resource.Setup,
+		file.Setup,
+		group.Setup,
+		groupmembership.Setup,
+		project.Setup,
+		projectmembership.Setup,
+		user.Setup,
 		providerconfig.Setup,
 	} {
 		if err := setup(mgr, o); err != nil {

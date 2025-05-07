@@ -1,0 +1,12 @@
+apiVersion: gitlab.crossplane.io/v1alpha1
+kind: Project
+metadata:
+  name: crossplane
+spec:
+  deletionPolicy: Delete
+  forProvider:
+    name: test-project
+    namespaceId: 2
+    description: "Project managed by crossplane"
+  providerConfigRef:
+    name: default

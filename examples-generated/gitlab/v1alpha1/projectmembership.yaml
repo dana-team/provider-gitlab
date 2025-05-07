@@ -1,0 +1,13 @@
+apiVersion: gitlab.crossplane.io/v1alpha1
+kind: ProjectMembership
+metadata:
+  annotations:
+    meta.upbound.io/example-id: gitlab/v1alpha1/projectmembership
+  labels:
+    testing.upbound.io/example-name: test
+  name: test
+spec:
+  forProvider:
+    accessLevel: guest
+    project: "12345"
+    userId: 1337

@@ -1,0 +1,29 @@
+apiVersion: gitlab.crossplane.io/v1alpha1
+kind: Group
+metadata:
+  annotations:
+    meta.upbound.io/example-id: gitlab/v1alpha1/group
+  labels:
+    testing.upbound.io/example-name: example
+  name: example
+spec:
+  forProvider:
+    description: An example group
+    name: example
+    path: example
+
+---
+
+apiVersion: gitlab.crossplane.io/v1alpha1
+kind: Project
+metadata:
+  annotations:
+    meta.upbound.io/example-id: gitlab/v1alpha1/group
+  labels:
+    testing.upbound.io/example-name: example
+  name: example
+spec:
+  forProvider:
+    description: An example project
+    name: example
+    namespaceId: ${gitlab_group.example.id}
