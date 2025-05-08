@@ -14,10 +14,9 @@ export TERRAFORM_PROVIDER_SOURCE=gitlabhq/gitlab
 export TERRAFORM_PROVIDER_REPO=https://gitlab.com/gitlab-org/terraform-provider-gitlab.git
 export TERRAFORM_PROVIDER_VERSION=17.11.0
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME=terraform-provider-gitlab
-export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX=https://releases.hashicorp.com/$(TERRAFORM_PROVIDER_DOWNLOAD_NAME)/$(TERRAFORM_PROVIDER_VERSION)
+export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX=https://gitlab.com/gitlab-org/$(TERRAFORM_PROVIDER_DOWNLOAD_NAME)/-/releases/v$(TERRAFORM_PROVIDER_VERSION)/downloads
 export TERRAFORM_NATIVE_PROVIDER_BINARY=terraform-provider-gitlab_v17.11.0
 export TERRAFORM_DOCS_PATH=docs/resources
-
 
 PLATFORMS ?= linux_amd64 linux_arm64
 
