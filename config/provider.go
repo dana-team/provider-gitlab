@@ -7,9 +7,9 @@ package config
 import (
 	// Note(turkenh): we are importing this to embed provider schema document
 	_ "embed"
-	"github.com/dana-team/provider-gitlab/config/gitlab"
 
 	ujconfig "github.com/crossplane/upjet/pkg/config"
+	"github.com/dana-team/provider-gitlab/config/gitlab"
 )
 
 const (

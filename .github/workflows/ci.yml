@@ -11,8 +11,10 @@ on:
 env:
   # Common versions
   GO_VERSION: '1.21'
-  GOLANGCI_VERSION: 'v1.54.0'
   DOCKER_BUILDX_VERSION: 'v0.8.2'
+  REPOSITORY_NAME: ${{ github.repository }}
+  DANA_ORG: dana-team
+  REGISTRY: ghcr.io
 
   # Common users. We can't run a step 'if secrets.XXX != ""' but we can run a
   # step 'if env.XXX != ""', so we copy these to succinctly test whether
@@ -100,9 +102,9 @@ jobs:
       # We could run 'make lint' but we prefer this action because it leaves
       # 'annotations' (i.e. it comments on PRs to point out linter violations).
       - name: Lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v7
         with:
-          version: ${{ env.GOLANGCI_VERSION }}
+          version: latest
 
   check-diff:
     runs-on: ubuntu-24.04
