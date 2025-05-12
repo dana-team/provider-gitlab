@@ -11,3 +11,5 @@ spec:
       name: {{ .Values.providerConfig.credentials.secretRef.name }}
       namespace: {{ .Values.providerConfig.credentials.secretRef.namespace }}
       key: {{ .Values.providerConfig.credentials.secretRef.key }}
+  baseURL: {{ .Values.providerConfig.baseURL }}
+  insecure: {{ .Values.providerConfig.insecure }}

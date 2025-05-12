@@ -31,13 +31,15 @@ deploymentRuntimeConfig:
 
 # -- Provider authentication configuration
 providerConfig:
-  name: gitlab-default
+  name: gitlab-provider
   credentials:
     source: Secret
     secretRef:
       name: gitlab-creds
       namespace: crossplane-system
       key: credentials
+  baseURL: https://gitlab.com
+  insecure: false
 
 # -- Secret values for the provider authentication.
 secret:

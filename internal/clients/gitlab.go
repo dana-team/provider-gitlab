@@ -72,6 +72,11 @@ func TerraformSetupBuilder(version, providerSource, providerVersion string) terr
 			ps.Configuration["base_url"] = *pc.Spec.BaseURL
 		}
 
+		// Add insecure if present in ProviderConfig
+		if pc.Spec.Insecure != nil && *pc.Spec.Insecure {
+			ps.Configuration["insecure"] = true
+		}
+
 		return ps, nil
 	}
 }

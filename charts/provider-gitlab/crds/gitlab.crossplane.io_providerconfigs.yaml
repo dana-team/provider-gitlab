@@ -112,6 +112,11 @@ spec:
                 required:
                 - source
                 type: object
+              insecure:
+                description: |-
+                  Insecure is a bool field to disable SSL verification
+                  Optional. Defaults to false.
+                type: boolean
             required:
             - credentials
             type: object

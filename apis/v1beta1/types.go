@@ -19,6 +19,11 @@ type ProviderConfigSpec struct {
 	// Optional. Defaults to https://gitlab.com
 	// +optional
 	BaseURL *string `json:"baseURL,omitempty"`
+
+	// Insecure is a bool field to disable SSL verification
+	// Optional. Defaults to false.
+	// +optional
+	Insecure *bool `json:"insecure,omitempty"`
 }
 
 // ProviderCredentials required to authenticate.
