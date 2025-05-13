@@ -26,4 +26,6 @@ spec:
   forProvider:
     description: An example project
     name: example
-    namespaceId: ${gitlab_group.example.id}
+    namespaceIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: example

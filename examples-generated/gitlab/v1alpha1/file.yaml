@@ -46,4 +46,6 @@ spec:
   forProvider:
     initializeWithReadme: true
     name: example
-    namespaceId: ${gitlab_group.this.id}
+    namespaceIdSelector:
+      matchLabels:
+        testing.upbound.io/example-name: this

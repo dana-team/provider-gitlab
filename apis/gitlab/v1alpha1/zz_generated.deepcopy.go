@@ -1962,6 +1962,16 @@ func (in *ProjectInitParameters) DeepCopyInto(out *ProjectInitParameters) {
 		*out = new(float64)
 		**out = **in
 	}
+	if in.NamespaceIDRef != nil {
+		in, out := &in.NamespaceIDRef, &out.NamespaceIDRef
+		*out = new(v1.Reference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.NamespaceIDSelector != nil {
+		in, out := &in.NamespaceIDSelector, &out.NamespaceIDSelector
+		*out = new(v1.Selector)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.OnlyAllowMergeIfAllDiscussionsAreResolved != nil {
 		in, out := &in.OnlyAllowMergeIfAllDiscussionsAreResolved, &out.OnlyAllowMergeIfAllDiscussionsAreResolved
 		*out = new(bool)
@@ -3326,6 +3336,16 @@ func (in *ProjectParameters) DeepCopyInto(out *ProjectParameters) {
 		in, out := &in.NamespaceID, &out.NamespaceID
 		*out = new(float64)
 		**out = **in
+	}
+	if in.NamespaceIDRef != nil {
+		in, out := &in.NamespaceIDRef, &out.NamespaceIDRef
+		*out = new(v1.Reference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.NamespaceIDSelector != nil {
+		in, out := &in.NamespaceIDSelector, &out.NamespaceIDSelector
+		*out = new(v1.Selector)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.OnlyAllowMergeIfAllDiscussionsAreResolved != nil {
 		in, out := &in.OnlyAllowMergeIfAllDiscussionsAreResolved, &out.OnlyAllowMergeIfAllDiscussionsAreResolved

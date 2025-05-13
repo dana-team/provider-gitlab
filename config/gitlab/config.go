@@ -1,6 +1,8 @@
 package gitlab
 
-import "github.com/crossplane/upjet/pkg/config"
+import (
+	"github.com/crossplane/upjet/pkg/config"
+)
 
 const (
 	apiVersion = "v1alpha1"
@@ -18,6 +20,13 @@ func Configure(p *config.Provider) {
 		r.ShortGroup = shortGroup
 		r.Kind = "Project"
 		r.Version = apiVersion
+	})
+
+	p.AddResourceConfigurator("gitlab_project", func(r *config.Resource) {
+		r.References["namespace_id"] = config.Reference{
+			TerraformName: "gitlab_group",
+			Extractor:     "github.com/crossplane/upjet/pkg/resource.ExtractResourceID()",
+		}
 	})
 
 	p.AddResourceConfigurator("gitlab_repository_file", func(r *config.Resource) {

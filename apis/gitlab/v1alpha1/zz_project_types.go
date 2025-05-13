@@ -375,7 +375,17 @@ type ProjectInitParameters struct {
 
 	// (Number) The namespace (group or user) of the project. Defaults to your user.
 	// The namespace (group or user) of the project. Defaults to your user.
+	// +crossplane:generate:reference:type=github.com/dana-team/provider-gitlab/apis/gitlab/v1alpha1.Group
+	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/pkg/resource.ExtractResourceID()
 	NamespaceID *float64 `json:"namespaceId,omitempty" tf:"namespace_id,omitempty"`
+
+	// Reference to a Group in gitlab to populate namespaceId.
+	// +kubebuilder:validation:Optional
+	NamespaceIDRef *v1.Reference `json:"namespaceIdRef,omitempty" tf:"-"`
+
+	// Selector for a Group in gitlab to populate namespaceId.
+	// +kubebuilder:validation:Optional
+	NamespaceIDSelector *v1.Selector `json:"namespaceIdSelector,omitempty" tf:"-"`
 
 	// (Boolean) Set to true if you want allow merges only if all discussions are resolved.
 	// Set to true if you want allow merges only if all discussions are resolved.
@@ -1304,8 +1314,18 @@ type ProjectParameters struct {
 
 	// (Number) The namespace (group or user) of the project. Defaults to your user.
 	// The namespace (group or user) of the project. Defaults to your user.
+	// +crossplane:generate:reference:type=github.com/dana-team/provider-gitlab/apis/gitlab/v1alpha1.Group
+	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/pkg/resource.ExtractResourceID()
 	// +kubebuilder:validation:Optional
 	NamespaceID *float64 `json:"namespaceId,omitempty" tf:"namespace_id,omitempty"`
+
+	// Reference to a Group in gitlab to populate namespaceId.
+	// +kubebuilder:validation:Optional
+	NamespaceIDRef *v1.Reference `json:"namespaceIdRef,omitempty" tf:"-"`
+
+	// Selector for a Group in gitlab to populate namespaceId.
+	// +kubebuilder:validation:Optional
+	NamespaceIDSelector *v1.Selector `json:"namespaceIdSelector,omitempty" tf:"-"`
 
 	// (Boolean) Set to true if you want allow merges only if all discussions are resolved.
 	// Set to true if you want allow merges only if all discussions are resolved.
