@@ -61,7 +61,17 @@ type FileInitParameters struct {
 
 	// (String) The name or ID of the project.
 	// The name or ID of the project.
+	// +crossplane:generate:reference:type=github.com/dana-team/provider-gitlab/apis/gitlab/v1alpha1.Project
+	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/pkg/resource.ExtractResourceID()
 	Project *string `json:"project,omitempty" tf:"project,omitempty"`
+
+	// Reference to a Project in gitlab to populate project.
+	// +kubebuilder:validation:Optional
+	ProjectRef *v1.Reference `json:"projectRef,omitempty" tf:"-"`
+
+	// Selector for a Project in gitlab to populate project.
+	// +kubebuilder:validation:Optional
+	ProjectSelector *v1.Selector `json:"projectSelector,omitempty" tf:"-"`
 
 	// (String) Name of the branch to start the new commit from.
 	// Name of the branch to start the new commit from.
@@ -221,8 +231,18 @@ type FileParameters struct {
 
 	// (String) The name or ID of the project.
 	// The name or ID of the project.
+	// +crossplane:generate:reference:type=github.com/dana-team/provider-gitlab/apis/gitlab/v1alpha1.Project
+	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/pkg/resource.ExtractResourceID()
 	// +kubebuilder:validation:Optional
 	Project *string `json:"project,omitempty" tf:"project,omitempty"`
+
+	// Reference to a Project in gitlab to populate project.
+	// +kubebuilder:validation:Optional
+	ProjectRef *v1.Reference `json:"projectRef,omitempty" tf:"-"`
+
+	// Selector for a Project in gitlab to populate project.
+	// +kubebuilder:validation:Optional
+	ProjectSelector *v1.Selector `json:"projectSelector,omitempty" tf:"-"`
 
 	// (String) Name of the branch to start the new commit from.
 	// Name of the branch to start the new commit from.
@@ -274,7 +294,6 @@ type File struct {
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.branch) || (has(self.initProvider) && has(self.initProvider.branch))",message="spec.forProvider.branch is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.content) || (has(self.initProvider) && has(self.initProvider.content))",message="spec.forProvider.content is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.filePath) || (has(self.initProvider) && has(self.initProvider.filePath))",message="spec.forProvider.filePath is a required parameter"
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.project) || (has(self.initProvider) && has(self.initProvider.project))",message="spec.forProvider.project is a required parameter"
 	Spec   FileSpec   `json:"spec"`
 	Status FileStatus `json:"status,omitempty"`
 }

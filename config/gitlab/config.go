@@ -35,6 +35,13 @@ func Configure(p *config.Provider) {
 		r.Version = apiVersion
 	})
 
+	p.AddResourceConfigurator("gitlab_repository_file", func(r *config.Resource) {
+		r.References["project"] = config.Reference{
+			TerraformName: "gitlab_project",
+			Extractor:     `github.com/crossplane/upjet/pkg/resource.ExtractResourceID()`,
+		}
+	})
+
 	p.AddResourceConfigurator("gitlab_project_membership", func(r *config.Resource) {
 		r.ShortGroup = shortGroup
 		r.Kind = "ProjectMembership"
