@@ -14,7 +14,9 @@ spec:
     commitMessage: 'feature: add meow file'
     content: ${base64encode("Meow goes the cat")}
     filePath: meow.txt
-    project: ${gitlab_project.this.id}
+    projectSelector:
+      matchLabels:
+        testing.upbound.io/example-name: this
 
 ---
 
