@@ -14,6 +14,7 @@ import (
 	groupmembership "github.com/dana-team/provider-gitlab/internal/controller/gitlab/groupmembership"
 	project "github.com/dana-team/provider-gitlab/internal/controller/gitlab/project"
 	projectmembership "github.com/dana-team/provider-gitlab/internal/controller/gitlab/projectmembership"
+	projectsharegroup "github.com/dana-team/provider-gitlab/internal/controller/gitlab/projectsharegroup"
 	user "github.com/dana-team/provider-gitlab/internal/controller/gitlab/user"
 	providerconfig "github.com/dana-team/provider-gitlab/internal/controller/providerconfig"
 )
@@ -27,6 +28,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		groupmembership.Setup,
 		project.Setup,
 		projectmembership.Setup,
+		projectsharegroup.Setup,
 		user.Setup,
 		providerconfig.Setup,
 	} {

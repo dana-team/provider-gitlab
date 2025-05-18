@@ -29,11 +29,31 @@ type ProjectMembershipInitParameters struct {
 
 	// encoded path of the project.
 	// The ID or URL-encoded path of the project.
+	// +crossplane:generate:reference:type=github.com/dana-team/provider-gitlab/apis/gitlab/v1alpha1.Project
+	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/pkg/resource.ExtractResourceID()
 	Project *string `json:"project,omitempty" tf:"project,omitempty"`
+
+	// Reference to a Project in gitlab to populate project.
+	// +kubebuilder:validation:Optional
+	ProjectRef *v1.Reference `json:"projectRef,omitempty" tf:"-"`
+
+	// Selector for a Project in gitlab to populate project.
+	// +kubebuilder:validation:Optional
+	ProjectSelector *v1.Selector `json:"projectSelector,omitempty" tf:"-"`
 
 	// (Number) The id of the user.
 	// The id of the user.
+	// +crossplane:generate:reference:type=github.com/dana-team/provider-gitlab/apis/gitlab/v1alpha1.User
+	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/pkg/resource.ExtractResourceID()
 	UserID *float64 `json:"userId,omitempty" tf:"user_id,omitempty"`
+
+	// Reference to a User in gitlab to populate userId.
+	// +kubebuilder:validation:Optional
+	UserIDRef *v1.Reference `json:"userIdRef,omitempty" tf:"-"`
+
+	// Selector for a User in gitlab to populate userId.
+	// +kubebuilder:validation:Optional
+	UserIDSelector *v1.Selector `json:"userIdSelector,omitempty" tf:"-"`
 }
 
 type ProjectMembershipObservation struct {
@@ -81,13 +101,33 @@ type ProjectMembershipParameters struct {
 
 	// encoded path of the project.
 	// The ID or URL-encoded path of the project.
+	// +crossplane:generate:reference:type=github.com/dana-team/provider-gitlab/apis/gitlab/v1alpha1.Project
+	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/pkg/resource.ExtractResourceID()
 	// +kubebuilder:validation:Optional
 	Project *string `json:"project,omitempty" tf:"project,omitempty"`
 
+	// Reference to a Project in gitlab to populate project.
+	// +kubebuilder:validation:Optional
+	ProjectRef *v1.Reference `json:"projectRef,omitempty" tf:"-"`
+
+	// Selector for a Project in gitlab to populate project.
+	// +kubebuilder:validation:Optional
+	ProjectSelector *v1.Selector `json:"projectSelector,omitempty" tf:"-"`
+
 	// (Number) The id of the user.
 	// The id of the user.
+	// +crossplane:generate:reference:type=github.com/dana-team/provider-gitlab/apis/gitlab/v1alpha1.User
+	// +crossplane:generate:reference:extractor=github.com/crossplane/upjet/pkg/resource.ExtractResourceID()
 	// +kubebuilder:validation:Optional
 	UserID *float64 `json:"userId,omitempty" tf:"user_id,omitempty"`
+
+	// Reference to a User in gitlab to populate userId.
+	// +kubebuilder:validation:Optional
+	UserIDRef *v1.Reference `json:"userIdRef,omitempty" tf:"-"`
+
+	// Selector for a User in gitlab to populate userId.
+	// +kubebuilder:validation:Optional
+	UserIDSelector *v1.Selector `json:"userIdSelector,omitempty" tf:"-"`
 }
 
 // ProjectMembershipSpec defines the desired state of ProjectMembership
@@ -127,8 +167,6 @@ type ProjectMembership struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.accessLevel) || (has(self.initProvider) && has(self.initProvider.accessLevel))",message="spec.forProvider.accessLevel is a required parameter"
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.project) || (has(self.initProvider) && has(self.initProvider.project))",message="spec.forProvider.project is a required parameter"
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.userId) || (has(self.initProvider) && has(self.initProvider.userId))",message="spec.forProvider.userId is a required parameter"
 	Spec   ProjectMembershipSpec   `json:"spec"`
 	Status ProjectMembershipStatus `json:"status,omitempty"`
 }

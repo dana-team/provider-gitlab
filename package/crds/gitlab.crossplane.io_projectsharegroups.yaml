@@ -4,7 +4,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.16.5
-  name: projectmemberships.gitlab.crossplane.io
+  name: projectsharegroups.gitlab.crossplane.io
 spec:
   group: gitlab.crossplane.io
   names:
@@ -12,10 +12,10 @@ spec:
     - crossplane
     - managed
     - gitlab
-    kind: ProjectMembership
-    listKind: ProjectMembershipList
-    plural: projectmemberships
-    singular: projectmembership
+    kind: ProjectShareGroup
+    listKind: ProjectShareGroupList
+    plural: projectsharegroups
+    singular: projectsharegroup
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,11 +34,9 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: 'ProjectMembership is the Schema for the ProjectMemberships API.
-          The gitlab_project_membership resource allows to manage the lifecycle of
-          a users project membership. -> If a project should grant membership to an
-          entire group use the gitlab_project_share_group resource instead. Upstream
-          API: GitLab REST API docs https://docs.gitlab.com/api/members/'
+        description: 'ProjectShareGroup is the Schema for the ProjectShareGroups API.
+          The gitlab_project_share_group resource allows to manage the lifecycle of
+          project shared with a group. Upstream API: GitLab REST API docs https://docs.gitlab.com/api/projects/#share-project-with-group'
         properties:
           apiVersion:
             description: |-
@@ -58,7 +56,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ProjectMembershipSpec defines the desired state of ProjectMembership
+            description: ProjectShareGroupSpec defines the desired state of ProjectShareGroup
             properties:
               deletionPolicy:
                 default: Delete
@@ -78,19 +76,93 @@ spec:
                 properties:
                   accessLevel:
                     description: |-
-                      (String) The access level for the member. Valid values are: no one, minimal, guest, planner, reporter, developer, maintainer, owner
-                      The access level for the member. Valid values are: `no one`, `minimal`, `guest`, `planner`, `reporter`, `developer`, `maintainer`, `owner`
+                      (String, Deprecated) The access level to grant the group for the project. Valid values are: no one, minimal, guest, planner, reporter, developer, maintainer, owner
+                      The access level to grant the group for the project. Valid values are: `no one`, `minimal`, `guest`, `planner`, `reporter`, `developer`, `maintainer`, `owner`
                     type: string
-                  expiresAt:
+                  groupAccess:
                     description: |-
-                      MM-DD
-                      Expiration date for the project membership. Format: `YYYY-MM-DD`
+                      (String) The access level to grant the group for the project. Valid values are: no one, minimal, guest, planner, reporter, developer, maintainer, owner
+                      The access level to grant the group for the project. Valid values are: `no one`, `minimal`, `guest`, `planner`, `reporter`, `developer`, `maintainer`, `owner`
                     type: string
-                  memberRoleId:
+                  groupId:
                     description: |-
-                      (Number) The ID of a custom member role. Only available for Ultimate instances.
-                      The ID of a custom member role. Only available for Ultimate instances.
+                      (Number) The id of the group.
+                      The id of the group.
                     type: number
+                  groupIdRef:
+                    description: Reference to a Group in gitlab to populate groupId.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  groupIdSelector:
+                    description: Selector for a Group in gitlab to populate groupId.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
                   project:
                     description: |-
                       encoded path of the project.
@@ -132,85 +204,6 @@ spec:
                     type: object
                   projectSelector:
                     description: Selector for a Project in gitlab to populate project.
-                    properties:
-                      matchControllerRef:
-                        description: |-
-                          MatchControllerRef ensures an object with the same controller reference
-                          as the selecting object is selected.
-                        type: boolean
-                      matchLabels:
-                        additionalProperties:
-                          type: string
-                        description: MatchLabels ensures an object with matching labels
-                          is selected.
-                        type: object
-                      policy:
-                        description: Policies for selection.
-                        properties:
-                          resolution:
-                            default: Required
-                            description: |-
-                              Resolution specifies whether resolution of this reference is required.
-                              The default is 'Required', which means the reconcile will fail if the
-                              reference cannot be resolved. 'Optional' means this reference will be
-                              a no-op if it cannot be resolved.
-                            enum:
-                            - Required
-                            - Optional
-                            type: string
-                          resolve:
-                            description: |-
-                              Resolve specifies when this reference should be resolved. The default
-                              is 'IfNotPresent', which will attempt to resolve the reference only when
-                              the corresponding field is not present. Use 'Always' to resolve the
-                              reference on every reconcile.
-                            enum:
-                            - Always
-                            - IfNotPresent
-                            type: string
-                        type: object
-                    type: object
-                  userId:
-                    description: |-
-                      (Number) The id of the user.
-                      The id of the user.
-                    type: number
-                  userIdRef:
-                    description: Reference to a User in gitlab to populate userId.
-                    properties:
-                      name:
-                        description: Name of the referenced object.
-                        type: string
-                      policy:
-                        description: Policies for referencing.
-                        properties:
-                          resolution:
-                            default: Required
-                            description: |-
-                              Resolution specifies whether resolution of this reference is required.
-                              The default is 'Required', which means the reconcile will fail if the
-                              reference cannot be resolved. 'Optional' means this reference will be
-                              a no-op if it cannot be resolved.
-                            enum:
-                            - Required
-                            - Optional
-                            type: string
-                          resolve:
-                            description: |-
-                              Resolve specifies when this reference should be resolved. The default
-                              is 'IfNotPresent', which will attempt to resolve the reference only when
-                              the corresponding field is not present. Use 'Always' to resolve the
-                              reference on every reconcile.
-                            enum:
-                            - Always
-                            - IfNotPresent
-                            type: string
-                        type: object
-                    required:
-                    - name
-                    type: object
-                  userIdSelector:
-                    description: Selector for a User in gitlab to populate userId.
                     properties:
                       matchControllerRef:
                         description: |-
@@ -265,19 +258,93 @@ spec:
                 properties:
                   accessLevel:
                     description: |-
-                      (String) The access level for the member. Valid values are: no one, minimal, guest, planner, reporter, developer, maintainer, owner
-                      The access level for the member. Valid values are: `no one`, `minimal`, `guest`, `planner`, `reporter`, `developer`, `maintainer`, `owner`
+                      (String, Deprecated) The access level to grant the group for the project. Valid values are: no one, minimal, guest, planner, reporter, developer, maintainer, owner
+                      The access level to grant the group for the project. Valid values are: `no one`, `minimal`, `guest`, `planner`, `reporter`, `developer`, `maintainer`, `owner`
                     type: string
-                  expiresAt:
+                  groupAccess:
                     description: |-
-                      MM-DD
-                      Expiration date for the project membership. Format: `YYYY-MM-DD`
+                      (String) The access level to grant the group for the project. Valid values are: no one, minimal, guest, planner, reporter, developer, maintainer, owner
+                      The access level to grant the group for the project. Valid values are: `no one`, `minimal`, `guest`, `planner`, `reporter`, `developer`, `maintainer`, `owner`
                     type: string
-                  memberRoleId:
+                  groupId:
                     description: |-
-                      (Number) The ID of a custom member role. Only available for Ultimate instances.
-                      The ID of a custom member role. Only available for Ultimate instances.
+                      (Number) The id of the group.
+                      The id of the group.
                     type: number
+                  groupIdRef:
+                    description: Reference to a Group in gitlab to populate groupId.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  groupIdSelector:
+                    description: Selector for a Group in gitlab to populate groupId.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
                   project:
                     description: |-
                       encoded path of the project.
@@ -319,85 +386,6 @@ spec:
                     type: object
                   projectSelector:
                     description: Selector for a Project in gitlab to populate project.
-                    properties:
-                      matchControllerRef:
-                        description: |-
-                          MatchControllerRef ensures an object with the same controller reference
-                          as the selecting object is selected.
-                        type: boolean
-                      matchLabels:
-                        additionalProperties:
-                          type: string
-                        description: MatchLabels ensures an object with matching labels
-                          is selected.
-                        type: object
-                      policy:
-                        description: Policies for selection.
-                        properties:
-                          resolution:
-                            default: Required
-                            description: |-
-                              Resolution specifies whether resolution of this reference is required.
-                              The default is 'Required', which means the reconcile will fail if the
-                              reference cannot be resolved. 'Optional' means this reference will be
-                              a no-op if it cannot be resolved.
-                            enum:
-                            - Required
-                            - Optional
-                            type: string
-                          resolve:
-                            description: |-
-                              Resolve specifies when this reference should be resolved. The default
-                              is 'IfNotPresent', which will attempt to resolve the reference only when
-                              the corresponding field is not present. Use 'Always' to resolve the
-                              reference on every reconcile.
-                            enum:
-                            - Always
-                            - IfNotPresent
-                            type: string
-                        type: object
-                    type: object
-                  userId:
-                    description: |-
-                      (Number) The id of the user.
-                      The id of the user.
-                    type: number
-                  userIdRef:
-                    description: Reference to a User in gitlab to populate userId.
-                    properties:
-                      name:
-                        description: Name of the referenced object.
-                        type: string
-                      policy:
-                        description: Policies for referencing.
-                        properties:
-                          resolution:
-                            default: Required
-                            description: |-
-                              Resolution specifies whether resolution of this reference is required.
-                              The default is 'Required', which means the reconcile will fail if the
-                              reference cannot be resolved. 'Optional' means this reference will be
-                              a no-op if it cannot be resolved.
-                            enum:
-                            - Required
-                            - Optional
-                            type: string
-                          resolve:
-                            description: |-
-                              Resolve specifies when this reference should be resolved. The default
-                              is 'IfNotPresent', which will attempt to resolve the reference only when
-                              the corresponding field is not present. Use 'Always' to resolve the
-                              reference on every reconcile.
-                            enum:
-                            - Always
-                            - IfNotPresent
-                            type: string
-                        type: object
-                    required:
-                    - name
-                    type: object
-                  userIdSelector:
-                    description: Selector for a User in gitlab to populate userId.
                     properties:
                       matchControllerRef:
                         description: |-
@@ -604,44 +592,34 @@ spec:
             required:
             - forProvider
             type: object
-            x-kubernetes-validations:
-            - message: spec.forProvider.accessLevel is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.accessLevel)
-                || (has(self.initProvider) && has(self.initProvider.accessLevel))'
           status:
-            description: ProjectMembershipStatus defines the observed state of ProjectMembership.
+            description: ProjectShareGroupStatus defines the observed state of ProjectShareGroup.
             properties:
               atProvider:
                 properties:
                   accessLevel:
                     description: |-
-                      (String) The access level for the member. Valid values are: no one, minimal, guest, planner, reporter, developer, maintainer, owner
-                      The access level for the member. Valid values are: `no one`, `minimal`, `guest`, `planner`, `reporter`, `developer`, `maintainer`, `owner`
+                      (String, Deprecated) The access level to grant the group for the project. Valid values are: no one, minimal, guest, planner, reporter, developer, maintainer, owner
+                      The access level to grant the group for the project. Valid values are: `no one`, `minimal`, `guest`, `planner`, `reporter`, `developer`, `maintainer`, `owner`
                     type: string
-                  expiresAt:
+                  groupAccess:
                     description: |-
-                      MM-DD
-                      Expiration date for the project membership. Format: `YYYY-MM-DD`
+                      (String) The access level to grant the group for the project. Valid values are: no one, minimal, guest, planner, reporter, developer, maintainer, owner
+                      The access level to grant the group for the project. Valid values are: `no one`, `minimal`, `guest`, `planner`, `reporter`, `developer`, `maintainer`, `owner`
                     type: string
+                  groupId:
+                    description: |-
+                      (Number) The id of the group.
+                      The id of the group.
+                    type: number
                   id:
                     description: (String) The ID of this resource.
                     type: string
-                  memberRoleId:
-                    description: |-
-                      (Number) The ID of a custom member role. Only available for Ultimate instances.
-                      The ID of a custom member role. Only available for Ultimate instances.
-                    type: number
                   project:
                     description: |-
                       encoded path of the project.
                       The ID or URL-encoded path of the project.
                     type: string
-                  userId:
-                    description: |-
-                      (Number) The id of the user.
-                      The id of the user.
-                    type: number
                 type: object
               conditions:
                 description: Conditions of the resource.

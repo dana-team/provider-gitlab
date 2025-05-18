@@ -48,6 +48,18 @@ func Configure(p *config.Provider) {
 		r.Version = apiVersion
 	})
 
+	p.AddResourceConfigurator("gitlab_project_membership", func(r *config.Resource) {
+		r.References["project"] = config.Reference{
+			TerraformName: "gitlab_project",
+			Extractor:     "github.com/crossplane/upjet/pkg/resource.ExtractResourceID()",
+		}
+
+		r.References["user_id"] = config.Reference{
+			TerraformName: "gitlab_user",
+			Extractor:     "github.com/crossplane/upjet/pkg/resource.ExtractResourceID()",
+		}
+	})
+
 	p.AddResourceConfigurator("gitlab_group_membership", func(r *config.Resource) {
 		r.ShortGroup = shortGroup
 		r.Kind = "GroupMembership"
@@ -58,5 +70,24 @@ func Configure(p *config.Provider) {
 		r.ShortGroup = shortGroup
 		r.Kind = "User"
 		r.Version = apiVersion
+		r.UseAsync = true
+	})
+
+	p.AddResourceConfigurator("gitlab_project_share_group", func(r *config.Resource) {
+		r.ShortGroup = shortGroup
+		r.Kind = "ProjectShareGroup"
+		r.Version = apiVersion
+	})
+
+	p.AddResourceConfigurator("gitlab_project_share_group", func(r *config.Resource) {
+		r.References["project"] = config.Reference{
+			TerraformName: "gitlab_project",
+			Extractor:     "github.com/crossplane/upjet/pkg/resource.ExtractResourceID()",
+		}
+
+		r.References["group_id"] = config.Reference{
+			TerraformName: "gitlab_group",
+			Extractor:     "github.com/crossplane/upjet/pkg/resource.ExtractResourceID()",
+		}
 	})
 }
