@@ -19,3 +19,4 @@ spec:
       namespace: upbound-system
     projectsLimit: 4
     resetPassword: false
+    username: example

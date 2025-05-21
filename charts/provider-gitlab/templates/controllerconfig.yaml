@@ -1,0 +1,16 @@
+# templates/controllerconfig.yaml
+{{- if .Values.webhook.enabled }}
+apiVersion: pkg.crossplane.io/v1alpha1
+kind: ControllerConfig
+metadata:
+  name: {{ .Values.provider.runtimeConfigRef.name }}
+  labels:
+    {{- include "provider-gitlab.labels" . | nindent 4 }}
+spec:
+  args:
+  {{- if .Values.webhook.certManager.enabled }}
+  metadata:
+    annotations:
+      cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "provider-gitlab.fullname" . }}-webhook-cert
+  {{- end }}
+{{- end }}

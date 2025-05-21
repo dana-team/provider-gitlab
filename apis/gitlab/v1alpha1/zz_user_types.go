@@ -74,6 +74,10 @@ type UserInitParameters struct {
 	// (String) String, defaults to 'active'. The state of the user account. Valid values are active, deactivated, blocked.
 	// String, defaults to 'active'. The state of the user account. Valid values are `active`, `deactivated`, `blocked`.
 	State *string `json:"state,omitempty" tf:"state,omitempty"`
+
+	// (String) The username of the user.
+	// The username of the user.
+	Username *string `json:"username,omitempty" tf:"username,omitempty"`
 }
 
 type UserObservation struct {
@@ -136,6 +140,10 @@ type UserObservation struct {
 	// (String) String, defaults to 'active'. The state of the user account. Valid values are active, deactivated, blocked.
 	// String, defaults to 'active'. The state of the user account. Valid values are `active`, `deactivated`, `blocked`.
 	State *string `json:"state,omitempty" tf:"state,omitempty"`
+
+	// (String) The username of the user.
+	// The username of the user.
+	Username *string `json:"username,omitempty" tf:"username,omitempty"`
 }
 
 type UserParameters struct {
@@ -214,6 +222,11 @@ type UserParameters struct {
 	// String, defaults to 'active'. The state of the user account. Valid values are `active`, `deactivated`, `blocked`.
 	// +kubebuilder:validation:Optional
 	State *string `json:"state,omitempty" tf:"state,omitempty"`
+
+	// (String) The username of the user.
+	// The username of the user.
+	// +kubebuilder:validation:Optional
+	Username *string `json:"username,omitempty" tf:"username,omitempty"`
 }
 
 // UserSpec defines the desired state of User
@@ -254,6 +267,7 @@ type User struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.email) || (has(self.initProvider) && has(self.initProvider.email))",message="spec.forProvider.email is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.name) || (has(self.initProvider) && has(self.initProvider.name))",message="spec.forProvider.name is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.username) || (has(self.initProvider) && has(self.initProvider.username))",message="spec.forProvider.username is a required parameter"
 	Spec   UserSpec   `json:"spec"`
 	Status UserStatus `json:"status,omitempty"`
 }

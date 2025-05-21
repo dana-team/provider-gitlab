@@ -6,7 +6,12 @@ metadata:
     {{- include "provider-gitlab.labels" . | nindent 4 }}
 spec:
   package: {{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}
+  {{- if .Values.webhook.enabled }}
+  controllerConfigRef:
+    name: {{ .Values.provider.runtimeConfigRef.name }}
+  {{- else if .Values.provider.runtimeConfigRef }}
   runtimeConfigRef:
     apiVersion: pkg.crossplane.io/v1beta1
     kind: DeploymentRuntimeConfig
     name: {{ .Values.provider.runtimeConfigRef.name }}
+  {{- end }}

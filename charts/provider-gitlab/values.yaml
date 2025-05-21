@@ -49,3 +49,16 @@ secret:
   type: Opaque
   # -- The gitlab access token to authenticate with.
   token: gitlab-token
+
+# -- Webhook values for the user webhook
+webhook:
+  # -- Enable webhooks
+  enabled: true
+  # -- CertManager configuration
+  certManager:
+    # -- Enable cert manager
+    enabled: true
+    # Reference to the ClusterIssuer
+    issuerRef:
+      kind: ClusterIssuer
+      name: selfsigned-issuer

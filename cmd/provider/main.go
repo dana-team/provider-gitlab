@@ -6,8 +6,10 @@ package main
 
 import (
 	"context"
+	"github.com/dana-team/provider-gitlab/internal/webhooks/user"
 	"os"
 	"path/filepath"
+	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"time"
 
 	"github.com/crossplane/crossplane-runtime/pkg/certificates"
@@ -81,6 +83,10 @@ func main() {
 		Cache: cache.Options{
 			SyncPeriod: syncPeriod,
 		},
+		WebhookServer: webhook.NewServer(webhook.Options{
+			Port:    9443,
+			CertDir: "/tmp/k8s-webhook-server/serving-certs",
+		}),
 		LeaderElectionResourceLock: resourcelock.LeasesResourceLock,
 		LeaseDuration:              func() *time.Duration { d := 60 * time.Second; return &d }(),
 		RenewDeadline:              func() *time.Duration { d := 50 * time.Second; return &d }(),
@@ -112,6 +118,7 @@ func main() {
 		// terraform.WithProviderRunner(terraform.NewSharedProvider(log, os.Getenv("TERRAFORM_NATIVE_PROVIDER_PATH"), terraform.WithNativeProviderArgs("-debuggable")))
 		WorkspaceStore: terraform.NewWorkspaceStore(log),
 		SetupFn:        clients.TerraformSetupBuilder(*terraformVersion, *providerSource, *providerVersion),
+		StartWebhooks:  true,
 	}
 
 	if *enableExternalSecretStores {
@@ -149,5 +156,11 @@ func main() {
 	}
 
 	kingpin.FatalIfError(controller.Setup(mgr, o), "Cannot setup GitLab controllers")
+	if o.StartWebhooks {
+		if err := user.SetupWebhookWithManager(mgr); err != nil {
+			kingpin.FatalIfError(err, "Cannot setup webhook")
+		}
+	}
 	kingpin.FatalIfError(mgr.Start(ctrl.SetupSignalHandler()), "Cannot start controller manager")
+
 }

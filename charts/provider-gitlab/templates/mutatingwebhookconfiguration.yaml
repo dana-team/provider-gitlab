@@ -1,0 +1,26 @@
+{{- if and .Values.webhook.enabled .Values.webhook.certManager.enabled }}
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: {{ include "provider-gitlab.fullname" . }}-mutating-webhook-configuration
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "provider-gitlab.fullname" . }}-webhook-cert
+  labels:
+    {{- include "provider-gitlab.labels" . | nindent 4 }}
+webhooks:
+  - name: mutate.user.gitlab.crossplane.io
+    clientConfig:
+      service:
+        name: {{ include "provider-gitlab.fullname" . }}-webhook-service
+        namespace: {{ .Release.Namespace }}
+        path: /mutate-gitlab-dana-io-v1alpha1-user
+        port: 443
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: ["gitlab.crossplane.io"]
+        apiVersions: ["v1alpha1"]
+        resources: ["users"]
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+    failurePolicy: Fail
+{{- end }}
